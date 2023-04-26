@@ -66,18 +66,19 @@ def waitResp(uart=uart, timeout=1000):
         if uart.any():
             resp = b"".join([resp, uart.read(1)])
     if resp != b'' :
+        data=resp
         resp = str(resp)
         print(resp)
-        if (resp.find('connect'))>=0:
+        if (resp.find('connect'))>=0: #接收去做特定的動作
             wifi_ready=1
-        if (resp.find('on'))>=0:
+        if (resp.find('on'))>=0: #接收去做特定的動作
             led_onboard.value(1)
-        if (resp.find('off'))>=0:
+        if (resp.find('off'))>=0: #接收去做特定的動作
             led_onboard.value(0)
-        if (resp.find('mario'))>=0:
+        if (resp.find('mario'))>=0: #接收去做特定的動作
             for c in mario:
                 playnote(c, 0.1)
-            speaker.duty_u16(65535) 
+            speaker.duty_u16(65535)
 # 將卡號由 2 進位轉換為 16 進位的字串
 def uidToString(uid):
     mystring = ""
@@ -124,6 +125,10 @@ while True:
                 utime.sleep(1)
                 while True :
                     waitResp()
+                    numbers = [int(data)for data in data.split() if data.isdigit()] #從字串中取數字 #接收去做特定的動作
+                    if len(numbers)==1:
+                        pwm.duty_u16(numbers[0])
+                    print(numbers)
 #                     temp = (sensor.temperature)
 #                     hum = (sensor.humidity)
 #                     print(temp)

@@ -21,7 +21,8 @@ ssid = 'SSID,blacktea890329'   #
 password = 'PSWD,20000329'   #
 mqtt_server = 'BROKER,mqttgo.io'
 topic_sub = 'TOPIC,topic/2023/0426'     
-topic_pub1= 'TOPIC1,blacktea'  
+topic_pub1= 'TOPIC1,blacktea'
+topic_pub2= 'TOPIC2,blacktea03'#第二個PB 依此類推
 ready='ready'
 
 def sendCMD_waitResp(cmd, uart=uart, timeout=1000):
@@ -55,6 +56,8 @@ sendCMD_waitResp(topic_sub)
 utime.sleep(0.1)
 sendCMD_waitResp(topic_pub1)
 utime.sleep(0.1)
+sendCMD_waitResp(topic_pub2)#第二個PB 依此類推
+utime.sleep(0.1)
 sendCMD_waitResp(ready)
 
 while (not wifi_ready) :
@@ -80,14 +83,14 @@ while True :
     if len(numbers)==1:
         pwm.duty_u16(numbers[0])
     print(numbers)
-#     temp = (sensor.temperature)
-#     hum = (sensor.humidity)
-#     print(temp)
-#     print(hum)
-#     temp=str(temp)
-#     humi=str(hum)
-#     x+=1
-#     y=str(x)
-#     sendCMD_waitResp('PB1,'+temp)
-#     sendCMD_waitResp('PB1,'+humi)
+    temp = (sensor.temperature)
+    hum = (sensor.humidity)
+    print(temp)
+    print(hum)
+    temp=str(temp)
+    humi=str(hum)
+    x+=1
+    y=str(x)
+    sendCMD_waitResp('PB1,'+temp)
+    sendCMD_waitResp('PB2,'+humi)
     utime.sleep(1)
