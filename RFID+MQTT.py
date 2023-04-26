@@ -95,7 +95,7 @@ while True:
         if stat == reader.OK:
             card_num = uidToString(uid)
             print(".....卡片號碼： %s" % card_num)
-            if  card_num == '0DFD2AF8':   #'7A811D60':
+            if  card_num == '0DFD2AF8':   #正確的卡片號碼去做對應的動作
                 print("開始連線")
                 led.value(1)   # 讀到授權的卡號後點亮綠色 LED
                 utime.sleep(2)       # 亮 2 秒鐘
