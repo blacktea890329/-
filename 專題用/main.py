@@ -10,7 +10,9 @@ print("RTC I2C Configuration: " + str(ds_i2c))              # Display the basic 
 ds = DS3231_I2C(ds_i2c)
 btn = Pin(17, Pin.IN, Pin.PULL_UP)
 speaker = PWM(Pin(18))
-flag2=0
+
+flag1=0
+
 #設定時間
 # current_time = b'\x00\x14\x08\x03\x17\x05\x23' # sec min hour week day mon year 
 # ds.set_time(current_time)
@@ -18,21 +20,14 @@ flag2=0
 # Define the name of week days list
 w  = ["Sunday","Monday","Tuesday","Wednesday","Thurday","Friday","Saturday"];
 
-# def take(pin):
-#     global flag1
-#     btn.irq(handler=None)
-#     if flag2!=0:
-#         speaker.duty_u16(65535)
-#         print("btn pushed")
-#         rotate()
-#         flag2=flag2+1
-#         return flag2
-#     else:
-#         print("btn pushed")
-#         rotate()
-#     btn.irq(handler=take)
-# 
-# btn.irq(trigger=Pin.IRQ_FALLING, handler=take)
+def take(pin):
+    global flag1
+    btn.irq(handler=None)
+    flag1=1
+    utime.sleep(1)
+    btn.irq(handler=take)
+
+btn.irq(trigger=Pin.IRQ_FALLING, handler=take)
 
 def delay():#設定延遲30分鐘
     global goal
@@ -46,7 +41,8 @@ def delay():#設定延遲30分鐘
     print(goal)
 
 delay()
-while 1:
+while True:
+    b=0
     t = ds.read_time()
     s=str(hex(t[1]))
     se=s.split("x")
@@ -56,15 +52,21 @@ while 1:
 #     print("Date: %02x/%02x/20%x" %(t[4],t[5],t[6])) #顯示日期 日/月/年
     print(" Time: %02x:%02x:%02x" %(t[2],t[1],t[0])) #顯示時間 時/分/秒
     print(t[0],t[1],t[2],t[3],t[4],t[5],t[6])
-    if (sec==goal):#把16進位的數轉為10進位 設定30秒後跳出
-       for i in range(0,30):
-            #音響
-            print("i")
-#             speaker.duty_u16(5000)
-#             speaker.freq(2093)
-            utime.sleep(1)
-#             speaker.duty_u16(65535)
-            if btn.value()==0: 
-                rotate()
-                break
+    while(flag1==0):
+        if (sec==goal):#把16進位的數轉為10進位 設定30秒後跳出
+            for i in range(0,30):
+                #音響
+                print("i")
+                print(flag1)
+    #             speaker.duty_u16(5000)
+    #             speaker.freq(2093)
+                utime.sleep(1)
+    #             speaker.duty_u16(65535)
+                if flag1!=0:
+                    rotate()
+                    b=2
+                    break
+    print("break")
+    if(b==2):
+        break
     utime.sleep(1)
