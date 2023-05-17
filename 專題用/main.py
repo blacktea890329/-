@@ -37,7 +37,7 @@ def delay():#設定延遲30分鐘
     d=str(hex(t[1]))
     d=d.split("x")
     d=int(d[1])
-    goal=d#延遲多久 改+後面的數字
+    goal=d+1#延遲多久 改+後面的數字
     print(goal)
 
 delay()
@@ -49,24 +49,25 @@ while True:
     print(se)
     print(goal)
     sec=int(se[1])#取得現在時間
-#     print("Date: %02x/%02x/20%x" %(t[4],t[5],t[6])) #顯示日期 日/月/年
+    print("Date: %02x/%02x/20%x" %(t[4],t[5],t[6])) #顯示日期 日/月/年
     print(" Time: %02x:%02x:%02x" %(t[2],t[1],t[0])) #顯示時間 時/分/秒
     print(t[0],t[1],t[2],t[3],t[4],t[5],t[6])
-    while(flag1==0):
-        if (sec==goal):#把16進位的數轉為10進位 設定30秒後跳出
+    if(sec==goal):
+        while True:#把16進位的數轉為10進位 設定30秒後跳出
             for i in range(0,30):
                 #音響
                 print("i")
                 print(flag1)
-    #             speaker.duty_u16(5000)
-    #             speaker.freq(2093)
+                #speaker.duty_u16(5000)
+                #speaker.freq(2093)
                 utime.sleep(1)
-    #             speaker.duty_u16(65535)
+                #speaker.duty_u16(65535)
                 if flag1!=0:
-                    rotate()
+                    #rotate()
                     b=2
                     break
-    print("break")
+            break
     if(b==2):
+        print("break")
         break
     utime.sleep(1)
