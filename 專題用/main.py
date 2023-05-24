@@ -197,7 +197,7 @@ for k in range(0,4):
                             b=2
                             break
                     speaker.duty_u16(65535)
-                    utime.sleep(30)
+                    utime.sleep(3)
                     if flag1!=0:
                         b=2
                         break
@@ -216,4 +216,3 @@ for k in range(0,4):
 #             sendCMD_waitResp('MESSAGE,'+"建議主動聯絡")
             break
         utime.sleep(1)
-servo(block[4])
