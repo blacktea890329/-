@@ -32,7 +32,7 @@ harry=["B5","0","E6","0","0","G6","FS6","0","E6","0","0","0","B6","0","A6","0","
 "G6","FS6","0","DS6","0","0","0","E6","0","B5","0","0","0","G5","0","B5","0","0","S","B5","0","0","E6","0","0","G6","FS6","0","0","E6","0","0","0","B6","0","D7","0","0","CS7","0",
 "C7","0","0","GS6","0","C7","0","0","B6","AS6","0","AS5","0","0","G6","0","E6","0","0","0","G5","0","B5","0"]
 
-block=[]#放入每一個的角度
+block=[40,80,120,160,0]#放入每一個的角度
 D=[0,0,0,0]
 #=======MQTT/Line notify========
 reset='RESET'
@@ -101,6 +101,7 @@ for i in range(0,3):
 def take(pin):
     global flag1
     btn.irq(handler=None)
+    speaker.duty_u16(65535)
     flag1=1
     utime.sleep(1)
     btn.irq(handler=take)
@@ -139,8 +140,7 @@ def playnote(Note, Duration):
         utime.sleep(Duration)
     elif Note != "0":
         speaker.duty_u16(65535)
-        utime.sleep(0.05)
-        speaker.duty_u16(50)        
+        speaker.duty_u16(100)        
         speaker.freq(MusicNotes[Note])
         print (MusicNotes[Note])
         utime.sleep(Duration)  
@@ -164,7 +164,7 @@ def nowtime():
     secs=secs.split("x")
     secs=str(secs[1])#取得現在時間
 # delay()
-
+servo(block[4])
 while True :
     waitResp()
     data=str(data)
@@ -190,23 +190,30 @@ for k in range(0,4):
         if(hour==int(goal_h[k]) and minu==int(goal_m[k]) and secs==goal_s and D[k]==0):
             btn.irq(handler=take) #開啟中斷功能可以拿藥
             while (D[k]==0):#把16進位的數轉為10進位 設定30秒後跳出#音響
-                for c in harry:
-                    playnote(c, 0.15)
+                for i in range(0,3):
+                    for c in harry:
+                        playnote(c, 0.15)
+                        if flag1!=0:
+                            b=2
+                            break
                     speaker.duty_u16(65535)
+                    utime.sleep(30)
                     if flag1!=0:
                         b=2
                         break
+                speaker.duty_u16(65535)
                 D[k]=1
         if(b!=0 and D[k]!=0):
             print("拿藥了")
-#            servo(block[k])
+            servo(block[k])
             btn.irq(handler=None)
-            sendCMD_waitResp('MESSAGE,'+"病患已完成服藥")
+#             sendCMD_waitResp('MESSAGE,'+"病患已完成服藥")
             break
         if(b==0 and D[k]!=0):
             print("沒有拿藥")
             btn.irq(handler=None)
-            sendCMD_waitResp('MESSAGE,'+"注意！病患尚未服藥")
-            sendCMD_waitResp('MESSAGE,'+"建議主動聯絡")
+#             sendCMD_waitResp('MESSAGE,'+"注意！病患尚未服藥")
+#             sendCMD_waitResp('MESSAGE,'+"建議主動聯絡")
             break
         utime.sleep(1)
+servo(block[4])
